@@ -19,7 +19,6 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue";
 import Todo from "@/types/Todo";
-import Order from "@/types/Order";
 import TodoItem from "@/components/TodoItem.vue";
 
 export default defineComponent({
@@ -28,23 +27,13 @@ export default defineComponent({
     todosArray: {
       type: Array as PropType<Todo[][]>,
       required: true
-    },
-    order: {
-      type: String as PropType<Order>,
-      required: true
     }
   },
   setup(props, { emit }) {
-    // const orderedTodos = computed(() => {
-    //   return [...props.todos].sort((a: Todo, b: Todo) => {
-    //     return a[props.order] > b[props.order] ? 1 : -1;
-    //   });
-    // });
     const clickTodo = (todo: Todo) => {
       emit("handleCLickTodo", todo);
     };
     return {
-      // orderedTodos,
       clickTodo
     };
   }

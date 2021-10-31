@@ -4,11 +4,7 @@
       @handleShowAddTodo="handleShowAddTodo"
       @changeSearchValue="changeSearchValueTodo"
     />
-    <TodosList
-      :todosArray="todos"
-      :order="order"
-      @handleCLickTodo="handleCLickTodo"
-    />
+    <TodosList :todosArray="todos" @handleCLickTodo="handleCLickTodo" />
     <TodoAdd
       v-if="showAddTodo"
       @handleShowAddTodo="handleShowAddTodo"
@@ -21,7 +17,6 @@
 import { defineComponent, onMounted, ref } from "vue";
 import Todo from "@/types/Todo";
 import TodosList from "@/components/TodosList.vue";
-import Order from "@/types/Order";
 import TodoHeader from "@/components/TodoHeader.vue";
 import TodoAdd from "@/components/TodoAdd.vue";
 import { ApiGetter, ApiUpdater } from "@/helpers/ApiConnecter";
@@ -36,7 +31,6 @@ export default defineComponent({
     });
 
     const todos = ref<TodosArray[]>([]);
-    const order = ref<Order>("name");
     const showAddTodo = ref(false);
 
     const changeSearchValueTodo = (value: string) => {
@@ -57,7 +51,7 @@ export default defineComponent({
     };
     const changeTodoList = (items: Todo[]) => {
       todos.value = items
-        .map(todo => {
+        .map((todo: Todo) => {
           return {
             //@ts-ignore
             category: todo.category.name,
@@ -82,17 +76,13 @@ export default defineComponent({
         getTodoList();
       });
     };
-    const handleCLickOrder = (valOrder: Order) => {
-      order.value = valOrder;
-    };
 
     return {
       todos,
-      order,
       showAddTodo,
       getTodoList,
       changeTodoList,
-      handleCLickOrder,
+      changeTodoList,
       handleCLickTodo,
       handleShowAddTodo,
       changeSearchValueTodo
