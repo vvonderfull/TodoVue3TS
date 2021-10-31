@@ -1,4 +1,5 @@
 import axios from "axios";
+import Todo from "@/types/Todo";
 
 interface ApiInterface {
   entity: string;
@@ -13,7 +14,6 @@ class Api implements ApiInterface {
 
 class ApiGetter extends Api {
   getAll(params: object | null = null) {
-    console.log(params);
     return axios({
       url: `http://localhost:3000/api/${this.entity}/getAll`,
       method: "GET",
@@ -33,9 +33,8 @@ class ApiCreator extends Api {
 }
 
 class ApiUpdater extends Api {
-  update(data: object) {
+  update(data: Todo) {
     return axios({
-      // @ts-ignore
       url: `http://localhost:3000/api/${this.entity}/update/${data._id}`,
       method: "PUT",
       data: data
@@ -44,11 +43,10 @@ class ApiUpdater extends Api {
 }
 
 class ApiDeleter extends Api {
-  delete(data: object) {
+  delete(id: string | number) {
     return axios({
-      url: `http://localhost:3000/api/${this.entity}/create`,
-      method: "POST",
-      data: data
+      url: `http://localhost:3000/api/todo/delete/${id}`,
+      method: "DELETE"
     });
   }
 }
