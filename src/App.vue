@@ -7,6 +7,7 @@
     <TodosList :todosArray="todos" @handleCLickTodo="handleCLickTodo" />
     <TodoAdd
       v-if="showAddTodo"
+      :editValue="editDataTodo"
       @handleShowAddTodo="handleShowAddTodo"
       @updateTodoList="getTodoList"
     />
@@ -19,7 +20,7 @@ import Todo from "@/types/Todo";
 import TodosList from "@/components/TodosList.vue";
 import TodoHeader from "@/components/TodoHeader.vue";
 import TodoAdd from "@/components/TodoAdd.vue";
-import { ApiGetter, ApiUpdater } from "@/helpers/ApiConnecter";
+import { ApiDeleter, ApiGetter, ApiUpdater } from "@/helpers/ApiConnecter";
 import TodosArray from "./types/TodosArray";
 
 export default defineComponent({
@@ -31,7 +32,8 @@ export default defineComponent({
     });
 
     const todos = ref<TodosArray[]>([]);
-    const showAddTodo = ref(false);
+    const showAddTodo = ref<boolean>(false);
+    const editDataTodo = ref<object | null>(null);
 
     const changeSearchValueTodo = (value: string) => {
       let todoApi = new ApiGetter("todo");
@@ -68,22 +70,44 @@ export default defineComponent({
         );
     };
     const handleShowAddTodo = (val: boolean) => {
+      if (!val) {
+        handleEditDataTodo(null);
+      }
       showAddTodo.value = val;
     };
-    const handleCLickTodo = (item: Todo) => {
-      item.completed = !item.completed;
-      new ApiUpdater("todo").update(item).then(() => {
-        getTodoList();
-      });
+    const handleEditDataTodo = (val: object | null) => {
+      editDataTodo.value = val;
+    };
+    const handleCLickTodo = (type: string, item: Todo) => {
+      switch (type) {
+        case "check":
+          item.completed = !item.completed;
+          new ApiUpdater("todo").update(item).then(() => {
+            getTodoList();
+          });
+          break;
+        case "edit":
+          handleEditDataTodo(item);
+          handleShowAddTodo(true);
+          break;
+        case "delete":
+          new ApiDeleter("todo").delete(item._id).then(() => {
+            getTodoList();
+          });
+          break;
+        default:
+          return false;
+      }
     };
 
     return {
       todos,
       showAddTodo,
+      editDataTodo,
       getTodoList,
       changeTodoList,
-      changeTodoList,
       handleCLickTodo,
+      handleEditDataTodo,
       handleShowAddTodo,
       changeSearchValueTodo
     };

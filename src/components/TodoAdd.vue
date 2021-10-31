@@ -9,32 +9,50 @@
       />
       <textarea
         v-model.trim="descriptionTodo"
-        type="text"
         placeholder="введите описание"
       ></textarea>
       <TodoCategory
         :selectCategory="selectCategory"
         @choseCategory="changeSelectCategory"
       />
-      <button @click="createTodo">создать</button>
+      <button @click="handleButtonClick">
+        {{ editValue ? "сохранить" : "создать" }}
+      </button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 import TodoCategory from "@/components/TodoCategory/TodoCategory.vue";
 import Category from "@/types/Category";
-import { ApiCreator } from "@/helpers/ApiConnecter";
+import { ApiCreator, ApiUpdater } from "@/helpers/ApiConnecter";
 
 export default defineComponent({
   components: { TodoCategory },
-  props: {},
+  props: {
+    editValue: {
+      type: Object,
+      default: () => {
+        return null;
+      }
+    }
+  },
   setup(props, { emit }) {
     const nameTodo = ref("");
     const descriptionTodo = ref("");
     const selectCategory = ref<Category | Object>({});
 
+    onMounted(() => {
+      if (props.editValue) {
+        setEditValue();
+      }
+    });
+    const setEditValue = () => {
+      nameTodo.value = props.editValue.name;
+      descriptionTodo.value = props.editValue.description;
+      selectCategory.value = props.editValue.category;
+    };
     const changeSelectCategory = (category: Category | Object) => {
       // TODO: For multiple
       // let isChosen = selectCategory.value.some(item => {
@@ -53,24 +71,39 @@ export default defineComponent({
       emit("handleShowAddTodo", false);
     };
 
-    const createTodo = () => {
+    const handleButtonClick = () => {
       if (
         !nameTodo.value ||
         !descriptionTodo.value ||
         !Object.entries(selectCategory.value).length
       )
         return false;
-      new ApiCreator("todo")
-        .create({
-          name: nameTodo.value,
-          description: descriptionTodo.value,
-          completed: false,
-          category: selectCategory.value
-        })
-        .then(() => {
-          emit("updateTodoList");
-          hideAddTodo();
-        });
+      if (!props.editValue) {
+        new ApiCreator("todo")
+          .create({
+            name: nameTodo.value,
+            description: descriptionTodo.value,
+            completed: false,
+            category: selectCategory.value
+          })
+          .then(() => {
+            emit("updateTodoList");
+            hideAddTodo();
+          });
+      } else {
+        new ApiUpdater("todo")
+          .update({
+            _id: props.editValue._id,
+            name: nameTodo.value,
+            description: descriptionTodo.value,
+            completed: props.editValue.completed,
+            category: selectCategory.value
+          })
+          .then(() => {
+            emit("updateTodoList");
+            hideAddTodo();
+          });
+      }
     };
 
     return {
@@ -78,7 +111,8 @@ export default defineComponent({
       descriptionTodo,
       selectCategory,
       hideAddTodo,
-      createTodo,
+      handleButtonClick,
+      setEditValue,
       changeSelectCategory
     };
   }

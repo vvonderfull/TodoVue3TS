@@ -1,11 +1,23 @@
 <template>
-  <li class="todo-item" @click="clickTodo">
+  <li class="todo-item" @click="clickTodo('check')">
     <div class="todo-item__checkbox">
       <img v-if="todo.completed" src="../assets/checked.svg" alt="checked" />
     </div>
     <div class="todo-item__info">
       <h2>{{ todo.name }}</h2>
       <p>{{ todo.description }}</p>
+    </div>
+    <div class="todo-item__settings">
+      <img
+        src="../assets/edit.svg"
+        alt="edit"
+        @click.stop="clickTodo('edit')"
+      />
+      <img
+        src="../assets/delete.png"
+        alt="delete"
+        @click.stop="clickTodo('delete')"
+      />
     </div>
   </li>
 </template>
@@ -22,8 +34,8 @@ export default defineComponent({
     }
   },
   setup(props, { emit }) {
-    const clickTodo = () => {
-      emit("handleCLickTodo", props.todo);
+    const clickTodo = (type: string) => {
+      emit("handleCLickTodo", type, props.todo);
     };
     return { clickTodo };
   }
@@ -33,6 +45,7 @@ export default defineComponent({
 <style scoped lang="scss">
 .todo-item {
   display: flex;
+  position: relative;
   align-items: center;
   width: 100%;
   height: 100px;
@@ -45,6 +58,9 @@ export default defineComponent({
   flex-shrink: 0;
   &:hover {
     background: white;
+    .todo-item__settings {
+      display: flex;
+    }
   }
   &__checkbox {
     display: flex;
@@ -62,6 +78,18 @@ export default defineComponent({
   &__info {
     display: flex;
     flex-direction: column;
+  }
+  &__settings {
+    position: absolute;
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    right: 15px;
+    height: 100%;
+    padding: 14px 0;
+    img {
+      width: 24px;
+    }
   }
 }
 </style>

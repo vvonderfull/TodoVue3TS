@@ -30,8 +30,8 @@ export default defineComponent({
     }
   },
   setup(props, { emit }) {
-    const clickTodo = (todo: Todo) => {
-      emit("handleCLickTodo", todo);
+    const clickTodo = (type: string, todo: Todo) => {
+      emit("handleCLickTodo", type, todo);
     };
     return {
       clickTodo
