@@ -12,10 +12,12 @@ class Api implements ApiInterface {
 }
 
 class ApiGetter extends Api {
-  getAll() {
+  getAll(params: object | null = null) {
+    console.log(params);
     return axios({
       url: `http://localhost:3000/api/${this.entity}/getAll`,
-      method: "GET"
+      method: "GET",
+      params: params
     });
   }
 }

@@ -5,22 +5,44 @@
         <label for="input-search">поиск:</label>
         <img src="../assets/add.svg" alt="add" @click="showAddTodo" />
       </div>
-      <input id="input-search" type="text" />
+      <input
+        @input="checkDebounce"
+        v-model="searchValue"
+        id="input-search"
+        type="text"
+      />
     </div>
   </header>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 
 export default defineComponent({
   name: "TodoHeader",
   props: {},
   setup(props, { emit }) {
+    const searchValue = ref("");
+    const timerId = ref(0);
+
     const showAddTodo = () => {
       emit("handleShowAddTodo", true);
     };
+
+    const checkDebounce = () => {
+      clearTimeout(timerId.value);
+      timerId.value = setTimeout(() => {
+        changeSearchValue();
+      }, 300);
+    };
+    const changeSearchValue = () => {
+      emit("changeSearchValue", searchValue.value);
+    };
+
     return {
+      searchValue,
+      checkDebounce,
+      changeSearchValue,
       showAddTodo
     };
   }

@@ -1,6 +1,9 @@
 <template>
   <div class="app">
-    <TodoHeader @handleShowAddTodo="handleShowAddTodo" />
+    <TodoHeader
+      @handleShowAddTodo="handleShowAddTodo"
+      @changeSearchValue="changeSearchValueTodo"
+    />
     <TodosList
       :todosArray="todos"
       :order="order"
@@ -36,6 +39,17 @@ export default defineComponent({
     const order = ref<Order>("name");
     const showAddTodo = ref(false);
 
+    const changeSearchValueTodo = (value: string) => {
+      let todoApi = new ApiGetter("todo");
+      todoApi
+        .getAll({
+          name: value,
+          description: value
+        })
+        .then((resp: any) => {
+          changeTodoList(resp.data);
+        });
+    };
     const getTodoList = () => {
       new ApiGetter("todo").getAll().then((resp: any) => {
         changeTodoList(resp.data);
@@ -80,7 +94,8 @@ export default defineComponent({
       changeTodoList,
       handleCLickOrder,
       handleCLickTodo,
-      handleShowAddTodo
+      handleShowAddTodo,
+      changeSearchValueTodo
     };
   }
 });
