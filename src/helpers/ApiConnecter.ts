@@ -12,6 +12,7 @@ class Api implements ApiInterface {
   }
 }
 
+
 class ApiGetter extends Api {
   getAll(params: object | null = null) {
     return axios({
