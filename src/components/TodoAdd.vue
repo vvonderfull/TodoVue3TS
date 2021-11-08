@@ -1,6 +1,7 @@
 <template>
   <div class="todo-add">
     <div class="todo-add__form">
+      <!-- TODO: Можно заюзать @ в src, он по умолчанию задается в tsconfig -->
       <img src="../assets/add.svg" alt="close" @click="hideAddTodo" />
       <input
         v-model.trim="nameTodo"

@@ -1,3 +1,4 @@
+// TODO: Папка не types тогда будет называться, а interfaces
 interface Category {
   _id: string;
   name: string;

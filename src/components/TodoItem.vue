@@ -1,6 +1,7 @@
 <template>
   <li class="todo-item" @click="clickTodo('check')">
     <div class="todo-item__checkbox">
+      <!-- TODO: Можно заюзать @ в src, он по умолчанию задается в tsconfig -->
       <img v-if="todo.completed" src="../assets/checked.svg" alt="checked" />
     </div>
     <div class="todo-item__info">

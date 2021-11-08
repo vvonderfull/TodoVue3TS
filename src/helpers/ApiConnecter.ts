@@ -1,9 +1,11 @@
 import axios from "axios";
 import Todo from "@/types/Todo";
 
+// TODO: По-хорошему интерфейс вынести отдельно к остальным
 interface ApiInterface {
   entity: string;
 }
+
 class Api implements ApiInterface {
   entity: string;
 
@@ -12,7 +14,7 @@ class Api implements ApiInterface {
   }
 }
 
-
+// TODO: Было бы правильнее сделать базовый класс для axios запросов, чтобы не вызывать большую конструкцию
 class ApiGetter extends Api {
   getAll(params: object | null = null) {
     return axios({

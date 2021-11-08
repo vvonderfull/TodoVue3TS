@@ -3,6 +3,7 @@
     <div class="app-header__search">
       <div class="app-header__label">
         <label for="input-search">поиск:</label>
+        <!-- TODO: Можно заюзать @ в src, он по умолчанию задается в tsconfig -->
         <img src="../assets/add.svg" alt="add" @click="showAddTodo" />
       </div>
       <input
